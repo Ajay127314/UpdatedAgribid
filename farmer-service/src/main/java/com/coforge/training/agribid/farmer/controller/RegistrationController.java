@@ -1,6 +1,7 @@
 package com.coforge.training.agribid.farmer.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.coforge.training.agribid.bidder.exception.ResourceNotFound;
 import com.coforge.training.agribid.farmer.model.Address;
-import com.coforge.training.agribid.farmer.model.Crop;
 import com.coforge.training.agribid.farmer.model.Farmer;
 import com.coforge.training.agribid.farmer.repository.RegistrationRepository;
 import com.coforge.training.agribid.farmer.service.AuthenticationService;
@@ -120,12 +119,11 @@ public class RegistrationController {
 		}
 	}
  
-//	@PostMapping("/sell/{fId}")
-//	public ResponseEntity<Crop> addCrop(@PathVariable Long fId, @Valid @RequestBody Crop crop) throws ResourceNotFound {
-//		Crop savedCrop = regService.addCrop(fId, crop);
-//	return new ResponseEntity<>(savedCrop, HttpStatus.CREATED);
-//      }
- 
+	
+	  @GetMapping("/allfarmers")
+	    public List<Farmer> getAllFarmerss() {
+	    	return regService.getAllFarmers();
+	  }
  
 
 }

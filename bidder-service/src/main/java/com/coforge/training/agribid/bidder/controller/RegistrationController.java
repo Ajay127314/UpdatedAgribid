@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import com.coforge.training.agribid.bidder.repository.RegistrationRepository;
 import com.coforge.training.agribid.bidder.service.AuthenticationService;
 import com.coforge.training.agribid.bidder.service.CropClient;
 import com.coforge.training.agribid.bidder.service.RegistrationService;
+import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
 import com.coforge.training.agribid.farmer.model.Crop;
 import com.coforge.training.agribid.farmer.model.DemoCrop;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,43 +155,32 @@ public class RegistrationController
         return cropClient. getSelectedStates();
     }
     
-    
-//    @PatchMapping("crops/{cid}/currentBid")
-//   public ResponseEntity<Void> updateCurrentBid(@PathVariable Long id, @RequestParam double currentBid)  {
-//    	
-//   	
-//    	
-//    	
-//    	
-//    	
-//       cropClient.updateCurrentBid(id, currentBid);
-//       return ResponseEntity.noContent().build();
-//       }
-   // http://localhost:8083/agribid/bidder-service/updateBid/1/currentBid?currentBid=2000
-    //@GetMapping("/agribid/farmer-service/crops")
-
-    @PatchMapping("/updateBid/{cid}/currentBid")
+    @PutMapping("/crops/{cid}/currentBid")
     public ResponseEntity<String> updateCurrentBid(@PathVariable Long cid, @RequestParam double currentBid) {
-        ResponseEntity<Crop> crop = cropClient.getCropById(cid);
-        if (crop == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        ResponseEntity<Crop> cropResponse = cropClient.getCropById(cid);
+        if (cropResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Crop not found.");
         }
 
-        LocalDateTime postedTime = crop.getBody().getPostedDateTime();
+        Crop crop = cropResponse.getBody();
+        LocalDateTime postedTime = crop.getPostedDateTime();
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (Duration.between(postedTime, currentTime).toHours() > 6) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bidding time has expired.");
         }
-        
-        cropClient.updateCurrentBid(cid, currentBid);
-       	return ResponseEntity.ok("Bid Amount Updated Successfully !");
 
+     /*   cropClient.updateCurrentBid(cid, currentBid);
+        return ResponseEntity.ok("Bid Amount Updated Successfully!");*/
+        ResponseEntity<Crop> response = cropClient.updateCurrentBid(cid, currentBid);
+   	  if (response.getStatusCode() == HttpStatus.NOT_FOUND) { return
+   	  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); } 
+   	  return ResponseEntity.ok("Bid Amount Updated Successfully!"); 
+   	  }
     }
-	
- 
 
-}
+
+
 	
 	
 	

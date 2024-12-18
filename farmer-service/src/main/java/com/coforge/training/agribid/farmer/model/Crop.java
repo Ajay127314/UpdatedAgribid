@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +15,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class Crop {
 

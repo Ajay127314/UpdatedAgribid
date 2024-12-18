@@ -66,8 +66,8 @@ public class Farmer {
 	@OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
 	private List<Crop> crops = new ArrayList<>();
  
- 
-//	@JsonBackReference
+  
+	@JsonBackReference
 	@OneToOne(mappedBy = "farmer", cascade = CascadeType.ALL)
 	private Address address;
 	

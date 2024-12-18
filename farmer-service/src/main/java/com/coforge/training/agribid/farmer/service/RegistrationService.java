@@ -1,11 +1,11 @@
 package com.coforge.training.agribid.farmer.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
-import com.coforge.training.agribid.farmer.model.Crop;
 import com.coforge.training.agribid.farmer.model.Farmer;
 import com.coforge.training.agribid.farmer.repository.CropRepository;
 import com.coforge.training.agribid.farmer.repository.RegistrationRepository;
@@ -55,12 +55,9 @@ public class RegistrationService {
         return false;
     }
 	
-	
-//	public Crop addCrop(Long fId, Crop crop) throws ResourceNotFound {
-//        Farmer farmer = regRepo.findById(fId)
-//                .orElseThrow(() -> new ResourceNotFound("Farmer not found"));
-//        crop.setFarmer(farmer);
-//        return crepo.save(crop);
-//    }
+	public List<Farmer> getAllFarmers() {
+        return regRepo.findAll();
+    }
+ 
 
 }
