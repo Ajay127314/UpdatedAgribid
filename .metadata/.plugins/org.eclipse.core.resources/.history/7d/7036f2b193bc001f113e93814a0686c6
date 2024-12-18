@@ -1,0 +1,42 @@
+//package com.coforge.training.agribid.farmer.service;
+//
+//import java.util.List;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Service;
+//
+//import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
+//import com.coforge.training.agribid.farmer.model.Crop;
+//import com.coforge.training.agribid.farmer.repository.BidRepository;
+//import com.coforge.training.agribid.farmer.repository.CropRepository;
+//
+//@Service
+//public class BidService {
+//	
+//	@Autowired
+//	private BidRepository brepo;
+//
+//	@Autowired
+//	private CropRepository crepo;
+//
+//	public List<Bid> getBidsForCrop(Long cropId) {
+//		return brepo.findByCropId(cropId);
+//	}
+//	public Bid placeBid(Long cropId, Bid bid) throws ResourceNotFound {
+//		Crop crop = crepo.findById(cropId)
+//				.orElseThrow(() -> new ResourceNotFound("Crop not found"));
+//
+//		if (bid.getAmount() <= crop.getCurrentBid()) {
+//			throw new IllegalArgumentException("Bid amount must be higher than the current bid");
+//		}
+//
+//		crop.setCurrentBid(bid.getAmount());
+//		crepo.save(crop);
+//
+//		bid.setCrop(crop);
+//		return brepo.save(bid);
+//	}
+//	
+//	
+//
+//}

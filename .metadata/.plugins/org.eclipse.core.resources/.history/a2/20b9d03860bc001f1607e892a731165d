@@ -1,0 +1,36 @@
+package com.coforge.training.agribid.farmer.model;
+
+
+import java.time.LocalDateTime;
+
+
+
+
+
+
+public class DemoCrop {
+	
+//	 private LocalDate date;       // For date only (e.g., 2024-12-16)
+//	    private LocalTime time; //  For time only (e.g., 14:30:00) 
+	    
+	    private long cid;
+	    private String cropType;
+	    private String cropName;
+	    private Double basePrice;
+	    private Double currentBid;
+	    private LocalDateTime postedDateTime;
+	    
+		public DemoCrop(long cid, String cropType, String cropName, Double basePrice, Double currentBid,
+				LocalDateTime postedDateTime) {
+			super();
+			this.cid = cid;
+			this.cropType = cropType;
+			this.cropName = cropName;
+			this.basePrice = basePrice;
+			this.currentBid = currentBid;
+			this.postedDateTime = postedDateTime;
+		}
+	    
+	    
+
+}

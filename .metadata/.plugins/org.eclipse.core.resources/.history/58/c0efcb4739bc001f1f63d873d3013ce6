@@ -1,0 +1,46 @@
+package com.coforge.training.agribid.farmer.service;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+import com.coforge.training.agribid.farmer.repository.CropRepository;
+import com.coforge.training.agribid.farmer.repository.RegistrationRepository;
+
+@Service
+public class CropService {
+	
+	  @Autowired
+	    private CropRepository cRepo;
+	    
+//	    @Autowired
+//	    private CropClient cClient;
+	    
+	    @Autowired
+	    private RegistrationRepository rRepo;
+	    
+	    public List<DemoCrop> getCropsInfo() {
+	        return cRepo.findSelectedCrops(); //Invokes Custom Query method
+	    }
+   
+	    
+	    public List<Crop> getAllCrops() {
+        return cRepo.findAll();
+	    }
+//	    public Crop getCropById(Long id) throws ResourceNotFound {
+//	        return crepo.findById(id)
+//	                .orElseThrow(() -> new ResourceNotFound("Crop not found"));
+//	    }
+
+	    public Crop saveCrop(Crop crop) {
+	    	
+	    	
+	        return cRepo.save(crop);
+	    }
+
+}

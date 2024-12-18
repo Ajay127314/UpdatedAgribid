@@ -1,0 +1,72 @@
+package com.coforge.training.agribid.bidder.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+public class BidderRegistration
+{
+		
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long bid;
+
+
+	@Column(name = "full_name")
+	@NotBlank(message = "Full name is mandatory")
+	private String fullName;
+
+
+
+	@Column(name = "contact_no", unique = true, nullable = false)
+	//@NotBlank(message = "Contact number is mandatory")
+	private long contactNo;
+
+
+	@Column(name = "email_id", nullable = false)
+	@NotBlank(message = "Email ID is mandatory")
+	@Email(message = "Email should be valid")
+	private String email;
+
+
+	@Column(name = "account_no")
+	@NotBlank(message = "Account number is mandatory")
+	private String accountNo;
+
+	@Column(name = "ifsc_code")
+	@NotBlank(message = "IFSC code is mandatory")
+	private String ifscCode;
+
+
+	@Column(name = "password")
+	@NotBlank(message = "Password is mandatory")
+	@Size(min = 8, message = "Password must be at least 8 characters long")
+	private String password;
+
+	@Column(name = "confirm_password")
+	@NotBlank(message = "Confirm password is mandatory")
+	@Size(min = 8, max = 255, message = "Password must contain between 8 and 255 characters")
+	private String confirmPassword;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	//private Address address;
+
+
+	@Lob
+	@JsonIgnore
+	private byte[] aadhaar;
+
+	@Lob
+	@JsonIgnore
+	private byte[] pan;
+
+
+	@Lob
+	@JsonIgnore
+	private byte[] tradeLicense;
+
+	
+	
+	
+}

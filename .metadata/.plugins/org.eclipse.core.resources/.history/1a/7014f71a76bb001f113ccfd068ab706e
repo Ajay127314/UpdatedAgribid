@@ -1,0 +1,156 @@
+package com.coforge.training.agribid.bidder.controller;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.coforge.training.agribid.bidder.model.Address;
+import com.coforge.training.agribid.bidder.model.Bidder;
+import com.coforge.training.agribid.bidder.repository.RegistrationRepository;
+import com.coforge.training.agribid.bidder.service.AuthenticationService;
+import com.coforge.training.agribid.bidder.service.CropClient;
+import com.coforge.training.agribid.bidder.service.RegistrationService;
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@RestController
+@RequestMapping("/bidder")
+
+
+public class RegistrationController
+{
+
+	@Autowired
+	private RegistrationService  regService;
+
+	@Autowired
+	private RegistrationRepository regRepo;
+
+	@Autowired
+	private AuthenticationService authService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	
+	@Autowired
+	private CropClient cropClient;
+
+
+	//DI Using Constructors
+	public RegistrationController(RegistrationService regService) {
+		super();
+		this.regService = regService;
+	}
+
+
+	//http://localhost:8083/agribid/bidder/registration
+
+	//Register Bidder
+	@PostMapping("/registration")
+	public ResponseEntity<Bidder> registerBidder(@Validated
+
+
+			@RequestPart("bidder") String  bidderJson,
+
+			@RequestPart("aadhaar") MultipartFile aadhaar,
+			@RequestPart("pan") MultipartFile pan,
+			@RequestPart("tradeLicense") MultipartFile tradeLicense ) throws IOException
+	{
+
+
+
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		Bidder bidder = objectMapper.readValue(bidderJson, Bidder.class);
+
+
+		Address address = bidder.getAddress();
+
+		address.setBidder(bidder);
+		bidder.setAddress(address);
+
+		bidder.setAadhar(aadhaar.getBytes());
+
+		bidder.setPan(pan.getBytes());
+
+		bidder.setTradeLicense(tradeLicense.getBytes());
+
+
+
+		Bidder savedBidder = regService.registerBidder(bidder);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedBidder);		
+
+	}
+
+
+	//http://localhost:8083/agribid/bidder/login
+	@PostMapping("/login")
+	public ResponseEntity<String> loginBidder(@RequestBody Bidder bidderLogIn) {
+		try {
+			Bidder bidder = authService.authenticate(bidderLogIn.getEmail(), bidderLogIn.getPassword());
+
+			if (bidder != null) {
+				return ResponseEntity.ok("Login successful!");
+			} else {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
+			}
+		} catch (Exception e) {
+			// Log the exception for debugging purposes
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An Error Occurred: " + e.getMessage());
+		}
+	}
+
+
+
+	//http://localhost:8083/agribid/bidder/update-password
+	@PostMapping("/update-password")
+	public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> request) {
+		String email = request.get("email");
+		String newPassword = request.get("newPassword");
+		boolean updated = regService.updatePassword(email, newPassword);
+		if (updated) {
+			return ResponseEntity.ok("Password updated successfully!");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+		}
+	}
+	
+	
+	
+	//http://localhost:8083/agribid/farmer/crops
+	
+	
+	@GetMapping("/agribid/farmer/crops")
+    public ResponseEntity<List<Crop>> getAllCrops(){
+        ResponseEntity<List<Crop>> crops = cropClient.getAllCrops();
+ 
+        if(crops.getStatusCode() == HttpStatus.OK){
+            List<Crop> p = crops.getBody();
+            return ResponseEntity.ok(p);
+        }
+        else {
+            return ResponseEntity.status(crops.getStatusCode()).body(null);
+        }
+    }
+
+}
+
+

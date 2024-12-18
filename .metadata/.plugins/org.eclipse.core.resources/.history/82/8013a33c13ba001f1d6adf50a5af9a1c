@@ -1,0 +1,15 @@
+package com.coforge.training.agribid.bidder.repository;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+
+import com.coforge.training.agribid.farmer.model.Crop;
+
+@FeignClient(name="farmer-service")
+public interface CropClient {
+	
+	List<Crop> getAllCrops();
+	 
+
+}

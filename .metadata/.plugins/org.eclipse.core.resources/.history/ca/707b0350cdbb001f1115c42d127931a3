@@ -1,0 +1,66 @@
+package com.coforge.training.agribid.farmer.service;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+import com.coforge.training.agribid.farmer.repository.CropRepository;
+
+@Service
+public class CropService {
+	
+	  @Autowired
+	    private CropRepository crepo;
+	    
+	    @Autowired
+	    private CropClient cClient;
+	    
+	    @Autowired
+	    private RegistrationRepository rRepo;
+	    
+	    public List<DemoCrop> getCropsInfo() {
+	        return crepo.findSelectedCrops(); //Invokes Custom Query method
+	    }
+//	    public List<Crop> getAllCrops() {
+//	        return crepo.findAll();
+//	    }
+//	    public Crop getCropById(Long id) throws ResourceNotFound {
+//	        return crepo.findById(id)
+//	                .orElseThrow(() -> new ResourceNotFound("Crop not found"));
+//	    }
+
+	    public Crop saveCrop(Crop crop) {
+	        return crepo.save(crop);
+	    }
+	    
+//	    public String placeBid(Long cropId, Double bidAmount) {
+//	        Crop crop = cClient.getCropById(cropId);
+//	        LocalDateTime now = LocalDateTime.now();
+//	        long hoursSincePosted = ChronoUnit.HOURS.between(crop.getPostedTime(), now);
+//
+//	        if (hoursSincePosted > 12) {
+//	            return "Bidding is closed";
+//	        }
+//
+//	        if (bidAmount > crop.getHighestBid()) {
+//	            crop.setHighestBid(bidAmount);
+//	            // Update the crop in Farmer microservice if needed
+//
+//	            Bid bidder = new Bid();
+//	            bidder.setCropId(cropId);
+//	            bidder.setBidAmount(bidAmount);
+//	            bidder.setBidTime(now);
+//	            rRepo.save(bidder);
+//
+//	            return "Bid placed successfully";
+//	        } else {
+//	            return "Bid amount must be higher than the current highest bid";
+//	        }
+//	    }
+
+}

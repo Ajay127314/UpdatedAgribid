@@ -1,0 +1,33 @@
+package com.coforge.training.agribid.farmer.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+import com.coforge.training.agribid.farmer.repository.CropRepository;
+
+@Service
+public class CropService {
+    @Autowired
+    private CropRepository crepo;
+    
+    public List<DemoCrop> getCropsInfo() {
+        return crepo.findSelectedCrops(); //Invokes Custom Query method
+    }
+//    public List<Crop> getAllCrops() {
+//        return crepo.findAll();
+//    }
+    public Crop getCropById(Long id) throws ResourceNotFound {
+        return crepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Crop not found"));
+    }
+
+    public Crop saveCrop(Crop crop) {
+        return crepo.save(crop);
+    }
+}
+ 

@@ -1,0 +1,28 @@
+package com.coforge.training.agribid.bidder.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.coforge.training.agribid.bidder.model.Bidder;
+import com.coforge.training.agribid.bidder.repository.RegistrationRepository;
+
+
+
+@Service
+public class RegistrationService 
+{
+	
+	@Autowired
+	private RegistrationRepository regRepo;
+	
+	public Bidder registerBidder(Bidder bidder )
+	{
+		return regRepo.save(bidder);
+	}
+		
+	
+	
+
+}

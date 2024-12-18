@@ -1,0 +1,24 @@
+package com.coforge.training.agribid.farmer.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class DemoCrop {
+	
+	
+    private String cropType;
+    private String cropName;
+    private Double basePrice;
+    private Double currentBid;
+    
+    
+	
+    
+    
+    
+}

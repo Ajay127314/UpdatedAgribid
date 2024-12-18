@@ -1,0 +1,5 @@
+package com.coforge.training.agribid.bidder.model;
+
+public class BidderRegistration {
+
+}

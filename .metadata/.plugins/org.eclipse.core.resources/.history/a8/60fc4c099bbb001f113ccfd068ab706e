@@ -1,0 +1,8 @@
+package com.coforge.training.agribid.bidder.model;
+
+public class Bid {
+	
+	private long id;
+	private double bidAmount;
+
+}

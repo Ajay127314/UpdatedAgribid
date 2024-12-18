@@ -1,0 +1,20 @@
+package com.coforge.training.agribid.farmer.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+
+
+public interface CropRepository extends JpaRepository<Crop, Long> {
+	
+	@Query("SELECT new com.coforge.training.agribid.farmer.model.DemoCrop"
+            + "(cropType,cropName,basePrice,currentBid)"
+            + " FROM Crop")
+    List<DemoCrop> findSelectedCrops();
+	
+
+}

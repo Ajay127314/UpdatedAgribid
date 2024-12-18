@@ -1,0 +1,60 @@
+package com.coforge.training.agribid.farmer.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
+import com.coforge.training.agribid.farmer.model.Bid;
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+import com.coforge.training.agribid.farmer.service.BidService;
+import com.coforge.training.agribid.farmer.service.CropService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/marketplace")
+public class MarketplaceController {
+    @Autowired
+    private CropService cservice;
+ 
+    @Autowired
+    private BidService bservice;
+ 
+    @GetMapping("/crops")
+    public List<DemoCrop> getAllCrops() {
+        return cservice.getCropsInfo();
+    }
+ 
+    @GetMapping("/crops/{id}")
+    public ResponseEntity<Map<String, Object>> getCropDetails(@PathVariable Long id) throws ResourceNotFound {
+        Crop crop = cservice.getCropById(id);
+        List<Bid> bids = bservice.getBidsForCrop(id);
+ 
+        Map<String, Object> response = new HashMap<>();
+        response.put("cropType", crop.getCropType());
+        response.put("cropName", crop.getCropName());
+        response.put("basePrice", crop.getBasePrice());
+        response.put("currentBidAmount", crop.getCurrentBid());
+        response.put("previousBids", bids);
+ 
+        return ResponseEntity.ok(response);
+    }
+ 
+    @PostMapping("/crops/{id}/bid")
+    public ResponseEntity<Bid> placeBid(@PathVariable Long id, @Valid @RequestBody Bid bid) throws ResourceNotFound {
+        Bid placedBid = bservice.placeBid(id, bid);
+        return new ResponseEntity<>(placedBid, HttpStatus.CREATED);
+    }
+}

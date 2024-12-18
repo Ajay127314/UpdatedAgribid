@@ -1,0 +1,31 @@
+package com.coforge.training.agribid.farmer.model;
+
+
+import java.time.LocalDateTime;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class DemoCrop {
+	
+//	 private LocalDate date;       // For date only (e.g., 2024-12-16)
+//	    private LocalTime time; //  For time only (e.g., 14:30:00) 
+	    
+	    private long cid;
+	    private String cropType;
+	    private String cropName;
+	    private Double basePrice;
+	    private Double currentBid;
+	    private LocalDateTime postedDateTime;
+
+}

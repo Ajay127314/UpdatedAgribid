@@ -1,0 +1,95 @@
+package com.coforge.training.agribid.bidder.controller;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.coforge.training.agribid.bidder.model.Address;
+import com.coforge.training.agribid.bidder.model.Bidder;
+import com.coforge.training.agribid.bidder.repository.RegistrationRepository;
+import com.coforge.training.agribid.bidder.service.AuthenticationService;
+import com.coforge.training.agribid.bidder.service.RegistrationService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api")
+public class RegistrationController
+{
+
+	@Autowired
+	private RegistrationService  regService;
+	
+    @Autowired
+    private RegistrationRepository regRepo;
+    
+    @Autowired
+    private AuthenticationService authService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+	//DI Using Constructors
+	public RegistrationController(RegistrationService regService) {
+		super();
+		this.regService = regService;
+	}
+
+
+	//http://localhost:8083/agribid/api/registration
+
+	//Register Bidder
+	@PostMapping("/registration")
+	public ResponseEntity<String> registerBidder(@Validated @RequestBody Bidder bidder){
+		try {
+			Address address = bidder.getAddress();    //get Data from Secondary table
+
+			//Establish bi-directional Mapping
+			address.setBidder(bidder);
+			bidder.setAddress(address);
+
+			Bidder registeredBidder= regService.registerBidder(bidder); //save Dealer details
+			if(registeredBidder != null) {
+				return ResponseEntity.ok("Registration Successfull");
+			} else {
+				return ResponseEntity.badRequest().body("Registartion Failed");
+			}
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+					body("An Error Occured :"+e.getMessage());
+		}
+
+	}
+
+
+	//http://localhost:8083/agribid/api/login
+	@PostMapping("/login")
+	public ResponseEntity<String> loginBidder(@RequestBody Bidder bidderLogIn) {
+	    try {
+	        Optional<Bidder> bidderOptional = authService.authenticate(bidderLogIn.getEmail(), bidderLogIn.getPassword());
+
+	        if (bidderOptional.isPresent()) {
+	            return ResponseEntity.ok("Login successful!");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
+	        }
+	    } catch (Exception e) {
+	        // Log the exception for debugging purposes
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An Error Occurred: " + e.getMessage());
+	    }
+	}
+
+	}
+
+

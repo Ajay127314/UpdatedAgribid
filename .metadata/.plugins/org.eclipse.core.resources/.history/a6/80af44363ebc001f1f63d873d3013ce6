@@ -1,0 +1,80 @@
+package com.coforge.training.agribid.farmer.controller;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import com.coforge.training.agribid.farmer.exception.ResourceNotFound;
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+
+import com.coforge.training.agribid.farmer.service.CropService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/farmer-service")
+public class MarketPlaceController {
+	
+	  @Autowired
+	    private CropService cService;
+	 
+//	    @Autowired
+//	    private BidService bservice;
+	 
+	    @GetMapping("/crops")
+	    public List<DemoCrop> getAllCrops() {
+	        return cService.getCropsInfo();
+	    }
+	    
+	    @PostMapping("/sell/{fId}")
+	    public ResponseEntity<Crop> sellCrop(@PathVariable Long fId, @RequestBody Crop crop,
+	    		@RequestPart("crop") String  cropJson,
+			@RequestPart("soilPHCertificate") MultipartFile soilPHCertificate) throws IOException	
+	{
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		Crop crop1= objectMapper.readValue(cropJson,Crop.class);
+		
+		crop.setSoilPHCertificate(soilPHCertificate.getBytes());
+
+		Crop savedCrop = cService.saveCrop(crop1);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedCrop);		
+
+	
+	    }
+	
+	  //crop details 
+		@PostMapping("/cropdetails")
+		public ResponseEntity<Crop> getCropDetails(@Validated
+				@RequestPart("crop") String  cropJson,
+				@RequestPart("soilPHCertificate") MultipartFile soilPHCertificate) throws IOException	
+		{
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+
+			Crop crop= objectMapper.readValue(cropJson,Crop.class);
+			
+			crop.setSoilPHCertificate(soilPHCertificate.getBytes());
+
+			Crop savedCrop = cService.saveCrop(crop);
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(savedCrop);		
+
+		}
+
+
+
+}

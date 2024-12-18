@@ -1,0 +1,5 @@
+package com.coforge.training.agribid.farmer.controller;
+
+public class MarketPlaceController {
+
+}

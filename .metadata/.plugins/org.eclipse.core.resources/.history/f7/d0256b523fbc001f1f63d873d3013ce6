@@ -1,0 +1,72 @@
+package com.coforge.training.agribid.farmer.model;
+
+
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
+
+
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table
+public class Crop {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long cid;
+ 
+	@Column(name = "crop_type", nullable = false)
+	@NotBlank(message = "Crop type is mandatory")
+	private String cropType;
+ 
+	@Column(name = "base_price", nullable = false)
+	@NotBlank(message = "Base Price is mandatory")
+	private Double basePrice;
+	
+	@Column(name = "crop_name", nullable = false)
+	@NotBlank(message = "Crop name is mandatory")
+	private String cropName;
+ 
+	@Column(name = "fertilizer_type", nullable = false)
+	@NotBlank(message = "Fertilizer type is mandatory")
+	private String fertilizerType;
+ 
+	@Column(name = "quantity", nullable = false)
+	@NotNull(message = "Quantity is mandatory")
+	@Positive(message = "Quantity must be a positive number")
+	private Integer quantity;
+	
+ 
+	@ManyToOne  //one-one mapping
+	@JoinColumn(name = "f_id") //foreign key field
+	private Farmer farmer; //reference class object
+	
+	
+	private Double currentBid ;
+	
+	
+	 private LocalDateTime postedDateTime;  
+	  
+	 @Column(name = "highest_bid")
+	 private Double highestBid ;
+	 
+	 
+	     @Lob
+		 @JsonIgnore
+		 private byte[] soilPHCertificate;
+	  
+//	  @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL)
+//	  private Bid bid;
+ 
+
+}

@@ -1,0 +1,14 @@
+package com.coforge.training.agribid.bidder.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.coforge.training.agribid.bidder.model.Bidder;
+
+
+
+public interface BidderRegistration  extends JpaRepository<Bidder, Long>
+{
+
+	
+	
+}

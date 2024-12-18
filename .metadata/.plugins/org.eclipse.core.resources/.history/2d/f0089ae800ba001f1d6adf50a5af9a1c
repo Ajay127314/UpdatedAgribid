@@ -1,0 +1,48 @@
+package com.coforge.training.agribid.bidder.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.coforge.training.agribid.bidder.model.Bidder;
+import com.coforge.training.agribid.bidder.repository.RegistrationRepository;
+
+
+
+@Service
+public class RegistrationService 
+{
+	
+	@Autowired
+	private RegistrationRepository regRepo;
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
+	private Bidder bidder;
+	
+	
+	public Bidder registerBidder(Bidder bidder )
+	{
+		bidder.setPassword(passwordEncoder.encode(bidder.getPassword()));
+		return regRepo.save(bidder);
+	}
+	
+	public boolean updatePassword(String email, String newPassword) {
+     regRepo  = regRepo.findByEmail(email);
+        if (regRepo != null) {
+            bidder.setPassword(passwordEncoder.encode(newPassword));
+            regRepo.save(bidder);
+            return true;
+        }
+        return false;
+    }
+
+	
+	
+	
+	
+
+}

@@ -1,0 +1,26 @@
+package com.coforge.training.agribid.bidder.service;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.coforge.training.agribid.farmer.model.Crop;
+import com.coforge.training.agribid.farmer.model.DemoCrop;
+
+@FeignClient(name="farmer-service")
+public interface CropClient {
+	
+	/*
+	 * @GetMapping("/crops") public List<DemoCrop> getAllCrops()
+	 */
+	@GetMapping("/agribid/farmer/crops")
+	 public List<DemoCrop> getAllCrops();
+	
+	
+	
+	
+	 
+
+}

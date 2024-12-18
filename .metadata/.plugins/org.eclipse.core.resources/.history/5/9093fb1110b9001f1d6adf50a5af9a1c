@@ -1,0 +1,13 @@
+package com.coforge.training.agribid.bidder.service;
+
+import org.springframework.stereotype.Service;
+
+
+
+@Service
+public class BidderRegistration 
+{
+	
+	
+
+}

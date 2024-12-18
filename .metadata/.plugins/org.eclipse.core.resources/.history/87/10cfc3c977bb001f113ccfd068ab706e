@@ -1,0 +1,151 @@
+package com.coforge.training.agribid.farmer.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+@Entity
+@Table
+public class Crop {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "crop_type", nullable = false)
+	@NotBlank(message = "Crop type is mandatory")
+	private String cropType;
+
+	@Column(name = "base_price", nullable = false)
+	@NotBlank(message = "Base Price is mandatory")
+	private Double basePrice;
+	
+	@NotNull 
+	private Double currentBid = 0.0;
+
+    
+
+	public Double getCurrentBid() {
+		return currentBid;
+	}
+
+	public void setCurrentBid(Double currentBid) {
+		this.currentBid = currentBid;
+	}
+
+	public List<Bid> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Bid> bids) {
+		this.bids = bids;
+	}
+
+	@OneToMany
+    (mappedBy = "crop", cascade = CascadeType.ALL)
+    private List<Bid> bids = new ArrayList<>();
+	
+	public Double getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Double basePrice) {
+		this.basePrice = basePrice;
+	}
+
+	@Column(name = "crop_name", nullable = false)
+	@NotBlank(message = "Crop name is mandatory")
+	private String cropName;
+
+	@Column(name = "fertilizer_type", nullable = false)
+	@NotBlank(message = "Fertilizer type is mandatory")
+	private String fertilizerType;
+
+	@Column(name = "quantity", nullable = false)
+	@NotNull(message = "Quantity is mandatory")
+	@Positive(message = "Quantity must be a positive number")
+	private Integer quantity;
+	
+	@OneToOne  //one-one mapping
+	@JoinColumn(name = "f_id") //foreign key field
+	private Farmer farmer; //reference class object
+	
+	
+//cropType,cropName,basePrice,currentBid)
+	public Crop(@NotBlank(message = "Crop type is mandatory") String cropType,
+			@NotBlank(message = "Crop name is mandatory") String cropName,
+			@NotBlank(message = "Base Price is mandatory") Double basePrice, 
+			@NotNull Double currentBid) {
+		super();
+		this.cropType = cropType;
+		this.basePrice = basePrice;
+		this.currentBid = currentBid;
+		this.cropName = cropName;
+	}
+
+	public Farmer getFarmer() {
+		return farmer;
+	}
+
+	public void setFarmer(Farmer farmer) {
+		this.farmer = farmer;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCropType() {
+		return cropType;
+	}
+
+	public void setCropType(String cropType) {
+		this.cropType = cropType;
+	}
+
+	public String getCropName() {
+		return cropName;
+	}
+
+	public void setCropName(String cropName) {
+		this.cropName = cropName;
+	}
+
+	public String getFertilizerType() {
+		return fertilizerType;
+	}
+
+	public void setFertilizerType(String fertilizerType) {
+		this.fertilizerType = fertilizerType;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+
+
+
+
+}
